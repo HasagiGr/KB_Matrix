@@ -68,7 +68,7 @@ namespace KB
             }
             for (int i = 1; i < 16; i++)
             {
-                Rounds[i] = Rounds[i - 1] * Rounds[i - 1];
+                Rounds[i] = Rounds[i - 1] * Rounds[0];
             }
             for (int i = 0; i < 16; i++)
             {
