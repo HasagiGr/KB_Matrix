@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using MathNet.Numerics.LinearAlgebra;
+using System.Threading.Tasks;
+using System.Drawing;
+using static KB.Program;
+
+namespace KB
+{
+    public class Shifting_mt
+    {
+        public Matrix<double> MatrixOfShift { get; private set; }
+        public int Range { get; private set; }
+        private Bitmap Data { get; set; }
+
+        public Shifting_mt(int range)
+        {
+            this.Range = range;
+            var mas = CreateMassives();
+            MatrixOfShift = Matrix<double>.Build.DenseOfColumns(mas);
+            FillTemplate();
+        }
+        private double[][] CreateMassives()
+        {
+            var x = new double[32][];
+            for (int i = 0; i < 21; i++)
+            {
+                var t = new double[32];
+                t[i + 11]=1;
+                x[i] = t;
+            }
+            for (int i = 21; i < 32; i++)
+            {
+                var t = new double[32];
+                t[i - 21] = 1;
+                x[i] = t;
+            }
+            return x;
+        }
+        private void FillTemplate()
+        {
+            var template = CreateTemplate(MatrixOfShift.ColumnCount, MatrixOfShift.RowCount);
+            for (int i = 0; i < MatrixOfShift.ColumnCount; i++)
+            {
+                for (int j = 0; j < MatrixOfShift.RowCount; j++)
+                {
+                    if (MatrixOfShift[j, i] == 1)
+                        FillSquare(template, i * 5, j * 5, Color.Green);
+                }
+            }
+            this.Data = template;
+        }
+        public Bitmap GetBitmap()
+        {
+            return Data;
+        }
+    }
+}
