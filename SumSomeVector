@@ -9,12 +9,12 @@ using static KB.Program;
 
 namespace KB
 {
-    public class SumSomeVectors
+    public class SumSomeVectors_mt
     {
         public Matrix<double> MatrixOfSum { get; private set; }
         public int NumberOfElements { get; private set; }
         private Bitmap Data { get; set; }
-        public SumSomeVectors(int number)
+        public SumSomeVectors_mt(int number)
         {
             this.NumberOfElements = number;
             var mas = CreateMassives();
@@ -34,7 +34,7 @@ namespace KB
                     x[i][j] = 0;
                     if (current == j)
                         x[i][j] = 1;
-                    else if (current < j)
+                    else if (current > j)
                         x[i][j] = 2;
                 }
             }
@@ -48,11 +48,12 @@ namespace KB
                 for (int j = 0; j < MatrixOfSum.RowCount; j++)
                 {
                     if (MatrixOfSum[j, i] == 1)
-                        FillSquare(template, i, j, Color.Green);
+                        FillSquare(template, i*5, j*5, Color.Green);
                     else if (MatrixOfSum[j, i] == 2)
-                        FillSquare(template, i, j, Color.Blue);
+                        FillSquare(template, i*5, j*5, Color.Blue);
                 }
             }
+            this.Data = template;
         }
         public Bitmap GetBitmap()
         {
