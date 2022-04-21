@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using MathNet.Numerics.LinearAlgebra;
+using System.Threading.Tasks;
+using System.Drawing;
+using static KB.Program;
+
+namespace KB
+{
+    public class Sbox_mt
+    {
+        public Matrix<double> MatrixOfSbox { get; private set; }
+        private Bitmap Data { get; set; }
+
+    }
+}
