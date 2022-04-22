@@ -4,14 +4,6 @@ using System.IO;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using System.Drawing;
-
-namespace KB
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using MathNet.Numerics.LinearAlgebra;
-using System.Drawing;
 using System.Text;
 
 namespace KB
