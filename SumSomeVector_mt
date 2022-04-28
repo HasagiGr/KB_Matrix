@@ -9,12 +9,12 @@ using static KB.Program;
 
 namespace KB
 {
-    public class SumSomeVectors_mt
+    public class Mt_SumSomeVectors
     {
         public Matrix<double> MatrixOfSum { get; private set; }
         public int NumberOfElements { get; private set; }
         private Bitmap Data { get; set; }
-        public SumSomeVectors_mt(int number)
+        public Mt_SumSomeVectors(int number)
         {
             this.NumberOfElements = number;
             var mas = CreateMassives();
