@@ -1,0 +1,109 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using MathNet.Numerics.LinearAlgebra;
+using System.Threading.Tasks;
+using System.Drawing;
+using static KB.Matrixes;
+
+namespace KB
+{
+    public class NonlinearRound
+    {
+        private Matrix<double> RoundMatrix { get; set; }
+        private Mt_Shifting ShiftingMatrix { get; set; }
+        private Mt_SumSomeVectors SumMatrix { get; set; }
+        private Mt_XorSomeVectors XorMatrix { get; set; }
+        private Mt_Sbox SboxMatrix { get; set; }
+        private int[] NumberOfSum = new int[] { 1, 3, 4, 6, 7 };
+        private int[] NumberofEnd = new int[] { 1, 4, 7 };
+        private Bitmap Data { get; set; }
+
+
+        public NonlinearRound()
+        {
+            var testing = Matrix<double>.Build.Dense(32, 32, 0);
+            RoundMatrix = Matrix<double>.Build.Dense(256, 256, 0);
+            this.ShiftingMatrix = new Mt_Shifting(11);
+            this.SumMatrix = new Mt_SumSomeVectors(1);
+            this.SboxMatrix = new Mt_Sbox();
+            this.XorMatrix = new Mt_XorSomeVectors(1);
+            testing = SumMatrix.MatrixOfSum;
+            testing = Multiply(testing, SboxMatrix.MatrixOfSbox);
+            testing = Multiply(testing, ShiftingMatrix.MatrixOfShift);
+            testing = Multiply(testing, XorMatrix.MatrixOfSum);
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    RoundMatrix.SetSubMatrix(0 + 32 * NumberofEnd[i], 0 + 32 * NumberOfSum[j], testing);
+                }
+            }
+            for (int i = 0; i < 32; i++)
+            {
+                RoundMatrix[256 - 32 + i, i] = 1;
+            }
+            for (int i = 32; i < 256; i++)
+            {
+                RoundMatrix[i - 32, i] = 1;
+            }
+            FillTemplate();
+        }
+
+        private void FillTemplate()
+        {
+            var template = CreateTemplate(RoundMatrix.RowCount, RoundMatrix.ColumnCount);
+            for (int i = 0; i < RoundMatrix.RowCount; i++)
+            {
+                for (int j = 0; j < RoundMatrix.ColumnCount; j++)
+                {
+                    if (RoundMatrix[j, i] == 1)
+                        FillSquare(template, i * 5, j * 5, Color.Green);
+                    else if (RoundMatrix[j, i] == 2)
+                        FillSquare(template, i * 5, j * 5, Color.Blue);
+                }
+            }
+            this.Data = template;
+        }
+        public Bitmap GetBitmap()
+        {
+            return Data;
+        }
+
+        public Matrix<double> getMatrix()
+        {
+            return RoundMatrix;
+        }
+
+        public Matrix<double> GetMatrix(int rNumber)
+        {
+            var currentRound = RoundMatrix;
+            for (int i = 1; i < rNumber; i++)
+            {
+                currentRound = Multiply(currentRound, RoundMatrix);
+            }
+            return currentRound;
+        }
+
+        public void bitmaps(int rNumber)
+        {
+            var bitmaps = new Bitmap[rNumber];
+            for (int i = 1; i < rNumber; i++)
+            {
+                var currentR = GetMatrix(i);
+                var template = CreateTemplate(currentR.RowCount, currentR.ColumnCount);
+                for (int j = 0; j < RoundMatrix.RowCount; j++)
+                {
+                    for (int r = 0; r < RoundMatrix.ColumnCount; r++)
+                    {
+                        if (currentR[r, j] == 1)
+                            FillSquare(template, j * 5, r * 5, Color.Green);
+                        else if (currentR[r, j] == 2)
+                            FillSquare(template, j * 5, r * 5, Color.Blue);
+                    }
+                }
+                template.Save(String.Format("C:/Users/a.gryaznov/source/repos/KB/NonLinear/{0} раунд.bmp",i));
+            }
+        }
+    }
+}
