@@ -9,10 +9,53 @@ using static KB.Program;
 
 namespace KB
 {
-    public class Sbox_mt
+    public class Mt_Sbox
     {
         public Matrix<double> MatrixOfSbox { get; private set; }
+        public string coeffs { get; private set; } = "0 0 0 0 0 1 1 1 0 0 1 0 0 0 1 0 0 0 1 0 1 1 1 0 1 1 0 0 0 1 1 0 1 0 0 1 1 1 0 0 0 1 0 0 0 0 1 0 1 1 1 1 0 0 1 0 0 1 1 0 1 0 0 0 0 0 0 1 1 1 0 1 1 1 1 1 1 0 0 0 1 1 0 1 1 0 0 0 1 0 0 1 0 0 1 0 1 1 1 1 1 1 0 1 1 0 0 0 1 1 1 0 0 1 0 1 1 1 1 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 1 1 1 1 1 1 1 0 1 0 1 0 0 0 1 1 0 1 1 0 1 1 0 0 0 0 1 1 0 1 1 1 1 1 1 0 0 1 1 0 1 1 1 0 1 0 0 1 0 0 0 1 1 1 0 0 0 0 0 1 1 1 0 1 1 1 1 1 1 1 1 0 0 0 1 1 0 0 0 1 1 1 1 1 0 1 1 0 1 1 1 1 0 1 1 1 0 0 0 1 1 1 0 0 1 0 1 0 0 1 1 0 1 0 0 1 0 0 1 0 1 0 0 1 1 1 0 1 1 1 1 1 0 1 0 0 1 0 1 1 1 0 0 0 1 0 0 1 0 1 1 0 1 0 0 1 1 0 1 1 1 0 0 0 1 1 1 0 0 1 0 0 1 0 1 0 0 0 0 0 0 0 0 0 1 0 0 1 0 1 1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 1 1 0 1 0 0 0 1 0 1 0 1 0 0 0 1 0 1 1 1 1 0 1 0 0 1 0 0 1 1 0 1 0 1 1 1 0 1 0 0 1 0 0 0 0 0 1 0 1 1 1 1 1 0 1 0 1 1 0 0 1 1 0 1 0 0 1 1 0 1 0 0 0 1 0 0 1 0 0 1 0 1 0 1 1 1 0 1 1 1 0 1 0 1 0 1 1 1 0 0 1 1 0 1 0 0 0 1 0 1 1 1 1 1 1 1 1 1 0 0 1 1 0 0 1 1 0 0 1 1 1 0 0 0 1 0 0 1 0 0 1 1 1 0 0 1 0 1 1 0 0 1 1 0 0 0 0 1 0 0 0 0 1 0 1 0 0 1 1 1 0";
+        public double[][] Coeffs { get; private set; }
         private Bitmap Data { get; set; }
+        public Mt_Sbox()
+        {
+            MatrixOfSbox = Matrix<double>.Build.Dense(32, 32, 0);
+            this.coeffs = coeffs.Replace(" ", "");
+            this.Coeffs = new double[32][];
+            CreateFunct();
+            CreateTemplate(32, 32);
+            FillTemplate();
+        }
 
+        private void FillTemplate()
+        {
+            var template = CreateTemplate(MatrixOfSbox.RowCount, MatrixOfSbox.ColumnCount);
+            for (int i = 0; i < MatrixOfSbox.ColumnCount; i++)
+            {
+                for (int j = 0; j < MatrixOfSbox.RowCount; j++)
+                {
+                    if (MatrixOfSbox[j, i] == 1)
+                        FillSquare(template, i * 5, j * 5, Color.Green);
+                    else if (MatrixOfSbox[j, i] == 2)
+                        FillSquare(template, i * 5, j * 5, Color.Blue);
+                }
+            }
+            this.Data = template;
+        }
+
+        private void CreateFunct()
+        {
+            var matrx = Matrix<double>.Build.Dense(4, 4, 2);
+            for (int i = 0; i < 8; i++)
+            {
+                MatrixOfSbox.SetSubMatrix(0 + 4 * i, 0 + 4 * i, matrx);
+
+            }
+            MatrixOfSbox[12, 15] = 1;
+            MatrixOfSbox[15, 15] = 0;
+            MatrixOfSbox[27, 27] = 0;
+        }
+        public Bitmap GetBitmap()
+        {
+            return Data;
+        }
     }
 }
