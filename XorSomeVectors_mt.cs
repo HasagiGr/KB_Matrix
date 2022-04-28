@@ -9,12 +9,12 @@ using static KB.Program;
 
 namespace KB
 {
-    public class XorSomeVectors_mt
+    public class Mt_XorSomeVectors
     {
         public Matrix<double> MatrixOfSum { get; private set; }
         public int NumberOfElements { get; private set; }
         private Bitmap Data { get; set; }
-        public XorSomeVectors_mt(int number)
+        public Mt_XorSomeVectors(int number)
         {
             this.NumberOfElements = number;
             var mas = CreateMassives();
@@ -34,8 +34,6 @@ namespace KB
                     x[i][j] = 0;
                     if (current == j)
                         x[i][j] = 1;
-                    else if (current > j)
-                        x[i][j] = 2;
                 }
             }
             return x;
@@ -43,12 +41,12 @@ namespace KB
         private void FillTemplate()
         {
             var template = CreateTemplate(MatrixOfSum.ColumnCount, MatrixOfSum.RowCount);
-            for (int i = 0; i < MatrixOfSum.ColumnCount; i++)
+            for (int i = 0; i < MatrixOfSum.RowCount; i++)
             {
-                for (int j = 0; j < MatrixOfSum.RowCount; j++)
+                for (int j = 0; j < MatrixOfSum.ColumnCount; j++)
                 {
                     if (MatrixOfSum[j, i] == 1)
-                        FillSquare(template, i * 5, j * 5, Color.Green);       
+                        FillSquare(template, i * 5, j * 5, Color.Green);
                 }
             }
             this.Data = template;
